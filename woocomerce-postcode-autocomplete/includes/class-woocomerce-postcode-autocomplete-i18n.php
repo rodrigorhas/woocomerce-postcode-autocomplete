@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WoocomerceCepAutocomplete
- * @subpackage WoocomerceCepAutocomplete/includes
+ * @package    WoocomercePostcodeAutocomplete
+ * @subpackage WoocomercePostcodeAutocomplete/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    WoocomerceCepAutocomplete
- * @subpackage WoocomerceCepAutocomplete/includes
+ * @package    WoocomercePostcodeAutocomplete
+ * @subpackage WoocomercePostcodeAutocomplete/includes
  * @author     Your Name <email@example.com>
  */
-class WoocomerceCepAutocompletei18n {
+class WoocomercePostcodeAutocompletei18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class WoocomerceCepAutocompletei18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'plugin-name',
+			'woocomerce-postcode-autocomplete',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

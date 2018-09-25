@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WoocomerceCepAutocomplete
- * @subpackage WoocomerceCepAutocomplete/includes
+ * @package    WoocomercePostcodeAutocomplete
+ * @subpackage WoocomercePostcodeAutocomplete/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    WoocomerceCepAutocomplete
- * @subpackage WoocomerceCepAutocomplete/includes
+ * @package    WoocomercePostcodeAutocomplete
+ * @subpackage WoocomercePostcodeAutocomplete/includes
  * @author     Your Name <email@example.com>
  */
-class WoocomerceCepAutocompleteDeactivator {
+class WoocomercePostcodeAutocompleteDeactivator {
 
 	/**
 	 * Short Description. (use period)

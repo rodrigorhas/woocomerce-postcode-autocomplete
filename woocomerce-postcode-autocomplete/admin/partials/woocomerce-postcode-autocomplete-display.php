@@ -8,8 +8,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    WoocomerceCepAutocomplete
- * @subpackage WoocomerceCepAutocomplete/admin/partials
+ * @package    WoocomercePostcodeAutocomplete
+ * @subpackage WoocomercePostcodeAutocomplete/admin/partials
  */
 ?>
 
