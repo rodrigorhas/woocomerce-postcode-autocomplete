@@ -15,7 +15,7 @@ function PluginScope ($) {
 	 * Definitions
 	 */
 
-	const BILLING_POSTCODE_FIELD = 'billing_postcode'
+	const FORM_POSTCODE_FIELD = 'postcode'
 	const CEP_API_ENDPOINT = 'https://webmaniabr.com/api/1/cep'
 	const RED_BACKGROUND = '#EF5350';
 
@@ -24,11 +24,28 @@ function PluginScope ($) {
 		app_secret: 'WGkzFdMHxWKE68yUOst5ijJCC7YQQ0P319Hk7tuhGTZMD61Y'
 	}
 
+	const supportedForms = [
+		
+		{
+			container: 'address',
+			fieldPrefixes: [
+				/* URI: /minha-conta/editar-endereco/cobranca/ */
+				'billing',
+				/* URI: /minha-conta/editar-endereco/entrega/ */
+				'shipping',
+			]
+		},
+		
+		/* URI: /finalizar-compra/ */
+		{ container: 'billing', fieldPrefixes: ['billing'] },
+	]
+
 	/*
 	 * Utils
 	 */
 
 	const fromFieldName = (id) => `#${ id }`
+	const fieldName = (prefix, name) => `${prefix}_${name}`
 
 	const buildPostcodeAPIUri = (postcode, credentials) =>
 		`${ CEP_API_ENDPOINT }/${ postcode }/?app_key=${ credentials.app_key }&app_secret=${ credentials.app_secret }`
@@ -42,27 +59,77 @@ function PluginScope ($) {
 		state: response.uf,
 	})
 
-	const billingForm = $('.woocommerce-billing-fields');
+	const getActiveSupportedForm = (supported) => {
+		const pluginError = { error: '[Postcode Plugin] No form supported' }
+		let res = {};
 
-	if (!billingForm.length) {
-		console.log('[Warn] Billing form not found')
+		supported.forEach((sup) => {
+			if (res && res.form) {
+				return res
+			}
+
+			const containerForm = $(`.woocommerce-${ sup.container }-fields`)
+
+			if (!containerForm.length) {
+				return
+			}
+
+			res.form = containerForm
+
+			if (sup.fieldPrefixes.length > 1) {
+
+				const postcodeElementQuery = containerForm.find('[id$="_postcode"]')
+
+				if (!postcodeElementQuery.length) {
+					return
+				}
+
+				postcodeElementQuery.each((_, element) => {
+					const elementPrefix = element.id.split('_')[0]
+
+					if (sup.fieldPrefixes.includes(elementPrefix)) {
+						res.fieldPrefix = elementPrefix
+					}
+				})
+
+				if (res.fieldPrefix) {
+					return res;
+				}
+			}
+
+			res.fieldPrefix = sup.fieldPrefixes[0];
+		})
+
+		return res ? res : pluginError;
+	}
+
+	/*
+	 * Logic
+	 */
+
+	const { form, fieldPrefix, error } = getActiveSupportedForm(supportedForms)
+
+	if (error) {
+		console.log(error)
 		return;
 	}
 
-	const $fields = billingForm.find('input[id^="billing"], select')
+	const $fields = form.find(`input[id^="${fieldPrefix}"], select`)
 	const fieldNames = Array.from($fields).map(({ id }) => id)
 
-	if (!fieldNames.includes(BILLING_POSTCODE_FIELD)) {
-		console.log('[Warn] CEP field not found')
+	const postcodeFieldName = fieldName(fieldPrefix, FORM_POSTCODE_FIELD)
+
+	if (!fieldNames.includes(postcodeFieldName)) {
+		console.log('[Warn] Postcode field not found')
 		return
 	}
 
-	const cepField = billingForm.find(
-		fromFieldName(BILLING_POSTCODE_FIELD)
+	const postcodeField = form.find(
+		fromFieldName(postcodeFieldName)
 	);
 
 	/* Attach blur listener */
-	cepField.on('blur', onInputBlur)
+	postcodeField.on('blur', onInputBlur)
 
 	/*
 	 * Handlers
@@ -82,7 +149,7 @@ function PluginScope ($) {
 	}
 
 	function onInputBlur() {
-		const postcode = cepField.val();
+		const postcode = postcodeField.val();
 		
 		if (!postcode.length) {
 			return
@@ -111,8 +178,8 @@ function PluginScope ($) {
 		Object.keys(formated).forEach((formatedKey) => {
 			const value = formated[formatedKey];
 
-			const fieldID = fromFieldName(`billing_${ formatedKey }`)
-			const field = billingForm.find(fieldID)
+			const fieldID = fromFieldName(fieldName(fieldPrefix, formatedKey))
+			const field = form.find(fieldID)
 
 			field.val(value)
 		})

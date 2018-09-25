@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              http://example.com
- * @since             1.1.0
+ * @since             1.0.0
  * @package           WoocomercePostcodeAutocomplete
  *
  * @wordpress-plugin
  * Plugin Name:       Woocomerce Postcode Autocomplete
  * Plugin URI:        http://example.com/woocomerce-postcode-autocomplete-uri/
  * Description:       Woocomerce Postcode Autocomplete plugin for registering/payment forms
- * Version:           1.0.0
+ * Version:           1.2.0
  * Author:            Rodrigo Silva (HDIG)
  * Author URI:        https://github.com/rodrigorhas
  * License:           GPL-2.0+
